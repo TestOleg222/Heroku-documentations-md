@@ -1,5 +1,5 @@
 ---
-{"dg-publish":true,"permalink":"/heroku-core-modules/","tags":["gardenEntry"],"dg-note-properties":{}}
+{"dg-publish":true,"permalink":"/heroku-core-modules/","dg-note-properties":{}}
 ---
 
 ## APILimiter - Защита от спама вызовов к API
