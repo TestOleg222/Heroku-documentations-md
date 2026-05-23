@@ -2,7 +2,9 @@
 {"dg-publish":true,"permalink":"/quickstart-development/","dgEnableSearch":true,"dg-note-properties":{}}
 ---
 
-In order to write your first module, let's take a look at the basic structure:
+# Как написать свой первый модуль
+
+Давай глянем на базовую структуру:
 
 ```python
 from herokutl.types import Message
@@ -10,8 +12,8 @@ from .. import loader, utils
 
 @loader.tds
 class MyModule(loader.Module):
-    """My module"""
-    strings = {"name": "MyModule", "hello": "Hello world!"}
+    """Мой модуль"""
+    strings = {"name": "MyModule", "hello": "Привет мир!"}
     strings_ru = {"hello": "Привет мир!"}
     strings_de = {"hello": "Hallo Welt!"}
 
@@ -25,21 +27,17 @@ class MyModule(loader.Module):
         await utils.answer(message, self.strings["hello"])
 ```
 
-The first line imports the `Message` type from herokutl.types and the loader module from `..`. The `loader` module contains all the necessary functions and classes to create a module.
-
-`@loader.tds` is a decorator that makes module translateable (`tds` comes from `translateable_docstring`). In the class docstring you should specify brief information about the module so that user, that reads it can understand, what it does.
-
-The `strings` dictionary is a special object, that contains translations for translateable strings. Suffix with desired language will allow user to use the module in the selected language. If there is no translation for the selected language, the default one will be used.
-
-The `@loader.command` decorator is used to mark a function as a command. It takes a lot of arguments. Most important ones are translations. `XX_doc` makes description for command in the language XX.
-
-`utils.answer` is an asyncronous function that answers the message. If it's possible to edit the message, it will edit it, otherwise it will send a new message. It always returns the resulted message so you can edit it again in the same command.
+Первая строка импортит тип `Message` из herokutl.types и модуль `loader` из `..`. В лоадере лежит всё необходимое для создания модуля.
+`@loader.tds` - декоратор, который делает модуль переводимым (`tds` от `translateable_docstring`). В докстринге класса стоит кратко описать, что вообще делает твой модуль, чтобы любой, кто его читает, сразу врубился.
+Словарь `strings` - это спецобъект с переводами строк. Суффикс с нужным языком позволяет юзать модуль на выбранном языке. Если перевода нет - подтянется дефолтный.
+Декоратор `@loader.command` помечает функцию как команду. Принимает кучу аргументов, самые важные - переводы. `XX_doc` задаёт описание команды на языке XX.
+`utils.answer` асинхронная функция-ответчик. Если сообщение можно отредачить - отредачит, иначе отправит новое. Всегда возвращает итоговое сообщение, так что можно снова его редачить в той же команде.
 
 ---
 
-# Watcher and command tags
+# Ватчер и теги команд
 
-Tags were introduced not long ago and continue to be developed. They are used to make filters for commands and watchers. An example of tags usage is as follows:
+Теги - относительно свежая фича, которая продолжает развиваться. Юзаются для фильтрации команд и ватчеров. Пример использования:
 
 ```python
 @loader.command(only_pm=True, only_photos=True, from_id=123456789)
@@ -47,60 +45,62 @@ async def mycommand(self, message: Message):
     ...
 ```
 
-The `only_pm` tag makes the command work only in PMs. The `only_photos` tag makes the command work only with photos. The `from_id` tag makes the command work only if the message was sent by the user with the specified ID.
+`only_pm` - команда работает только в личках. 
+`only_photos` - только с фотками. 
+`from_id` - только если сообщение прислал юзер с указанным ID.
 
-## Full list of available tags:
-
----
-
-- `no_commands` - Ignore all userbot commands in watcher
-- `only_commands` - Capture only userbot commands in watcher
-- `out` - Capture only outgoing events
-- `in` - Capture only incoming events
-- `only_message`s - Capture only messages (not join events)
-- `editable` - Capture only messages, which can be edited (no forwards etc.)
-- `no_media` - Capture only messages without media and files
-- `only_media` - Capture only messages with media and files
-- `only_photos` - Capture only messages with photos
-- `only_videos` - Capture only messages with videos
-- `only_audios` - Capture only messages with audios
-- `only_docs` - Capture only messages with documents
-- `only_stickers` - Capture only messages with stickers
-- `only_inline` - Capture only messages with inline queries
-- `only_channels` - Capture only messages with channels
-- `only_groups` - Capture only messages with groups
-- `only_pm` - Capture only messages with private chats
-- `no_pm` - Exclude messages with private chats
-- `no_channels` - Exclude messages with channels
-- `no_groups` - Exclude messages with groups
-- `no_inline` - Exclude messages with inline queries
-- `no_stickers` - Exclude messages with stickers
-- `no_docs` - Exclude messages with documents
-- `no_audios` - Exclude messages with audios
-- `no_videos` - Exclude messages with videos
-- `no_photos` - Exclude messages with photos
-- `no_forwards` - Exclude forwarded messages
-- `no_reply` - Exclude messages with replies
-- `no_mention` - Exclude messages with mentions
-- `mention` - Capture only messages with mentions
-- `only_reply` - Capture only messages with replies
-- `only_forwards` - Capture only forwarded messages
-- `startswith` - Capture only messages that start with given text
-- `endswith` - Capture only messages that end with given text
-- `contains` - Capture only messages that contain given text
-- `regex` - Capture only messages that match given regex
-- `filter` - Capture only messages that pass given function
-- `from_id` - Capture only messages from given user
-- `chat_id` - Capture only messages from given chat
-- `thumb_url` - Works for inline command handlers. Will be shown in help
-- `alias` - Set single alias for a command
-- `aliases` - Set multiple aliases for a command
+## Полный список доступных тегов:
 
 ---
 
-# Config validators
+- `no_commands` - игнорить все команды юзербота в вотчере
+- `only_commands` - ловить только команды юзербота в вотчере
+- `out` - ловить только исходящие ивенты
+- `in` - ловить только входящие ивенты
+- `only_messages` - ловить только сообщения (не ивенты входа)
+- `editable` - ловить только редактируемые сообщения (без форвардов и т.п.)
+- `no_media` - ловить только сообщения без медиа и файлов
+- `only_media` - ловить только сообщения с медиа и файлами
+- `only_photos` - ловить только сообщения с фотками
+- `only_videos` - ловить только сообщения с видосами
+- `only_audios` - ловить только сообщения с аудио
+- `only_docs` - ловить только сообщения с доками
+- `only_stickers` - ловить только сообщения со стикерами
+- `only_inline` - ловить только инлайн-запросы
+- `only_channels` - ловить только сообщения из каналов
+- `only_groups` - ловить только сообщения из групп
+- `only_pm` - ловить только личку
+- `no_pm` - не трогать личку
+- `no_channels` - не трогать каналы
+- `no_groups` - не трогать группы
+- `no_inline` - не трогать инлайн
+- `no_stickers` - не трогать стикеры
+- `no_docs` - не трогать доки
+- `no_audios` - не трогать аудио
+- `no_videos` - не трогать видосы
+- `no_photos` - не трогать фотки
+- `no_forwards` - не трогать форварды
+- `no_reply` - не трогать реплаи
+- `no_mention` - не трогать упоминания
+- `mention` - ловить только упоминания
+- `only_reply` - ловить только реплаи
+- `only_forwards` - ловить только форварды
+- `startswith` - ловить сообщения, начинающиеся с заданного текста
+- `endswith` - ловить сообщения, заканчивающиеся на заданный текст
+- `contains` - ловить сообщения, содержащие заданный текст
+- `regex` - ловить сообщения, подходящие под регулярку
+- `filter` - ловить сообщения, прошедшие через заданную функцию-фильтр
+- `from_id` - ловить сообщения только от конкретного юзера
+- `chat_id` - ловить сообщения только из конкретного чата
+- `thumb_url` - для инлайн-хендлеров, показывается в хелпе
+- `alias` - задать один алиас для команды
+- `aliases` - задать несколько алиасов для команды
 
-Validators are used to sanitize input config data. See the following example for usage:
+---
+
+# Валидаторы конфига
+
+Валидаторы нужны для санитизации входящих данных конфига. Пример:
 
 ```python
 @loader.tds
@@ -112,43 +112,43 @@ class MyModule(loader.Module):
             loader.ConfigValue(
                 "task_delay",
                 60,
-                "Delay between tasks in seconds",
+                "Задержка между тасками в секундах",
                 validator=loader.validators.Integer(minimum=0),
             ),
             loader.ConfigValue(
                 "sleep_between_tasks",
                 False,
-                "Sleep between tasks instead of waiting for them to finish",
+                "Слипать между тасками вместо ожидания их завершения",
                 validator=loader.validators.Boolean(),
             ),
             loader.ConfigValue(
                 "tasks_to_run",
                 [],
-                "Tasks to run",
+                "Таски для запуска",
                 validator=loader.validators.MultiChoice(["task1", "task2", "task3"]),
             ),
         )
 ```
 
-## Full list of available validators:
+## Полный список валидаторов:
 
-- `Boolean` - True or False
-- `Integer` - Integer number
-- `Choice` - One of the given options
-- `MultiChoice` - One or more of the given options
-- `Series` - One or more options (not from the given list)
-- `Link` - Valid URL
-- `String` - Any string
-- `RegExp` - String that matches the given regular expression
-- `Float` - Float number
-- `TelegramID` - Telegram ID
-- `Union` - Used to combine multiple validators (Integer or Float etc.)
-- `NoneType` - None
-- `Hidden` - Good for tokens and over sensitive data
-- `Emoji` - Valid emoji(-s)
-- `EntityLike` - Valid entity (user, chat, channel etc.) - link, id or url
+- `Boolean` - True или False
+- `Integer` - целое число
+- `Choice` - один из предложенных вариантов
+- `MultiChoice` - один или несколько вариантов из списка
+- `Series` - один или несколько вариантов (не из заданного списка)
+- `Link` - валидная урла
+- `String` - любая строка
+- `RegExp` - строка, подходящая под регулярку
+- `Float` - флоат
+- `TelegramID` - Telegram ID
+- `Union` - комбо из нескольких валидаторов (Integer или Float и т.п.)
+- `NoneType` - None
+- `Hidden` - топчик для токенов и прочих чувствительных данных
+- `Emoji` - валидный эмодзи(-и)
+- `EntityLike` - валидная энтити (юзер, чат, канал и т.п.) - ссылка, id или урл
 
-### You can create your own validators. For this purpose use the base class `Validator` (`heroku.loader.validators.Validator`):
+### Можно написать свой валидатор. Для этого юзай базовый класс `Validator` (`heroku.loader.validators.Validator`):
 
 ```python
 class Cat(Validator):
@@ -158,10 +158,10 @@ class Cat(Validator):
     @staticmethod
     def _validate(value: typing.Any) -> str:
         if not isinstance(value, str):
-            raise ValidationError("Cat's name must be a string")
+            raise ValidationError("Имя кошки должно быть строкой")
 
         if value not in {"Mittens", "Fluffy", "Garfield"}:
-            raise ValidationError("This cat is not allowed")
+            raise ValidationError("Такая кошка не разрешена")
 
         return f"Cat {value}"
 
@@ -171,26 +171,29 @@ class Cat(Validator):
 loader.ConfigValue(
     "cat",
     "Mittens",
-    "Cat's name",
+    "Имя кошки",
     validator=Cat(),
 )
 ```
 
 ---
 
-# Database operations
+# Работа с базой данных
 
-Heroku has a built-in database. You can use it to persistently store data required for your module to work. First way is to use database object directly:
+У Heroku есть встроенная БД. Можно юзать её для персистентного хранения данных, которые нужны модулю.
+Первый способ - работать с объектом базы данных напрямую:
 
 - `self._db.get(owner, value, default)`
 - `self._db.set(owner, value, data)`
 - `self._db.pointer(owner, value, default)`
-  Much better approach is to use wrappers:
+
+Гораздо удобнее юзать обёртки:
+
 - `self.db.get(value, default)`
 - `self.db.set(value, data)`
 - `self.db.pointer(value, default)`
 
-`self.get` and `self.set` are pretty straight-forward, whereas `self.pointer` is a bit more complicated. It returns a pointer to the value in the database. This pointer can be used to change the value in the database without having to call `self.set` again. This is useful for example when you want to periodically add / remove items from a list in the database. See the following example:
+`self.get` и `self.set` - всё понятно. А вот `self.pointer` чуть хитрее: возвращает указатель на значение в БД. Через него можно менять данные, не вызывая `self.set` каждый раз. Удобно, когда надо периодически добавлять/удалять айтемы из списка. Пример:
 
 ```python
 self._users = self.pointer("users", [])
@@ -206,4 +209,5 @@ self.set("state", self._state)
 ```
 
 ---
+
 # By SunnexGB
